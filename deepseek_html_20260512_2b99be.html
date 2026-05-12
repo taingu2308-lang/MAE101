@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Trắc nghiệm: Đạo hàm - Vi phân - Nguyên hàm | Giải tích 15 giây</title>
+    <!-- MathJax 3 (đã cấu hình đúng để hiển thị inline và display) -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(145deg, #eef2f5 0%, #d9e2e9 100%);
+            font-family: 'Segoe UI', 'Arial', 'Times New Roman', sans-serif;
+            padding: 30px 20px;
+            color: #1e2f3a;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.96);
+            border-radius: 42px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+            overflow: hidden;
+            padding: 20px 30px 40px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            text-align: center;
+            color: #1b4d2e;
+            border-left: 6px solid #2c7a4d;
+            border-right: 6px solid #2c7a4d;
+            display: inline-block;
+            width: auto;
+            margin: 0 auto 15px;
+            padding: 0 20px;
+            background: #f9fff3;
+            border-radius: 60px;
+        }
+
+        .sub {
+            text-align: center;
+            font-style: italic;
+            color: #2c6e49;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .quiz-stats {
+            display: flex;
+            justify-content: space-between;
+            background: #1e4735;
+            padding: 12px 25px;
+            border-radius: 60px;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .score-box {
+            background: #ffdd99;
+            color: #3b2a1f;
+            padding: 5px 18px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+        }
+
+        .reset-btn {
+            background: #ffb347;
+            border: none;
+            padding: 5px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+
+        .reset-btn:hover {
+            background: #ff9f1a;
+            transform: scale(0.97);
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 36px;
+            margin-bottom: 28px;
+            box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            border: 1px solid #dce9e2;
+        }
+
+        .q-header {
+            background: #2b5b3e;
+            color: white;
+            padding: 14px 24px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            display: flex;
+            gap: 12px;
+            align-items: baseline;
+        }
+
+        .q-num {
+            background: #f5b042;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-size: 1rem;
+        }
+
+        .q-text {
+            background: #eef5f0;
+            padding: 20px 28px;
+            font-size: 1.1rem;
+            border-left: 6px solid #2c7a4d;
+            font-weight: 500;
+        }
+
+        .options {
+            padding: 8px 24px 24px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: #f9fbfa;
+            border: 1.5px solid #cddfd7;
+            border-radius: 100px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: 0.1s linear;
+            font-size: 0.98rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option:hover {
+            background: #eef3ef;
+            border-color: #6f9e84;
+            transform: translateX(5px);
+        }
+
+        .prefix {
+            font-weight: bold;
+            background: #d4e2db;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 30px;
+            color: #1a4a31;
+        }
+
+        .feedback {
+            margin: 0 24px 20px 24px;
+            padding: 14px 18px;
+            border-radius: 24px;
+            font-size: 0.95rem;
+            display: none;
+            background: #f1f9f4;
+            border-left: 8px solid;
+        }
+
+        .feedback.correct-feedback {
+            background: #e0f7e8;
+            border-left-color: #2b8c4a;
+            color: #145c2e;
+            display: block;
+        }
+
+        .feedback.wrong-feedback {
+            background: #ffeae9;
+            border-left-color: #dc4c3a;
+            color: #9b2f20;
+            display: block;
+        }
+
+        .option.correct-highlight {
+            background: #b8e0c5;
+            border-color: #1b6b3c;
+            box-shadow: 0 0 0 2px #308a53;
+        }
+
+        .option.wrong-highlight {
+            background: #f8d7da;
+            border-color: #dc4c3a;
+            text-decoration: line-through;
+        }
+
+        @media (max-width: 750px) {
+            .container {
+                padding: 16px;
+            }
+            .q-text {
+                padding: 14px 18px;
+            }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 35px;
+            font-size: 0.8rem;
+            color: #4f6b5e;
+        }
+        
+        /* Đảm bảo MathJax inline không bị vỡ */
+        mjx-container {
+            display: inline-block !important;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div style="text-align: center;">
+        <h1>📐 GIẢI TÍCH TRONG 15 GIÂY</h1>
+        <div class="sub">Đạo hàm · Vi phân · Nguyên hàm — Bản chất "tỉ lệ vi phân" & "Phân giã – Tái tạo"</div>
+    </div>
+    <div class="quiz-stats">
+        <span>🧪 10 câu trắc nghiệm (mỗi câu 4 lựa chọn)</span>
+        <span class="score-box">✅ Điểm: <span id="scoreValue">0</span> / <span id="totalQuestions">10</span></span>
+        <button class="reset-btn" id="resetQuiz">⟳ Làm lại / Đặt lại</button>
+    </div>
+    <div id="quizContainer"></div>
+    <footer>
+        💡 Bấm vào đáp án: xanh ✔️ nếu đúng — đỏ ❌ nếu sai + hiện đáp án + giải thích chi tiết.<br>
+        📐 Công thức MathJax: \(\frac{df}{dx}, \int_a^b, \lim\limits_{\Delta x \to 0}\)
+    </footer>
+</div>
+
+<script>
+    // ---------------------- DỮ LIỆU CÂU HỎI (nội dung công thức dạng text thuần, không có dấu \( \) trong chuỗi lưu) ------------------
+    const questions = [
+        { // 1
+            text: `Theo bài giảng, bản chất của <strong>đạo hàm</strong> được hiểu theo cách mở rộng từ tỉ lệ tiểu học như thế nào?`,
+            options: [
+                "Tỉ số giữa hai số lớn bất kỳ",
+                "Tỉ lệ vi phân: \\( \\dfrac{df}{dx} = \\lim\\limits_{\\Delta x \\to 0} \\dfrac{\\Delta f}{\\Delta x} \\)",
+                "Thương của hai số thực thông thường",
+                "Phép cộng các vi phân \\(dx\\)"
+            ],
+            correct: 1,
+            explanation: "Đạo hàm là tỉ lệ vi phân – mở rộng của tỉ lệ thường: \\( f'(x) = \\frac{df}{dx} = \\lim_{\\Delta x \\to 0} \\frac{f(x+\\Delta x)-f(x)}{\\Delta x} \\). Tử và mẫu đều là vô cùng bé."
+        },
+        { // 2
+            text: `Từ nguyên 'vi phân' được các nhà toán học Việt Nam (Tạ Quang Bửu, Lê Văn Thiêm) giải thích theo nghĩa nào?`,
+            options: [
+                "Vi = lớn, phân = chia cắt",
+                "Vi = bé, phân = phân biệt → sự phân biệt cực kỳ bé",
+                "Vi = viết, phân = phần trăm",
+                "Vi = vi diệu, phân = phân tích"
+            ],
+            correct: 1,
+            explanation: "GS Tạ Quang Bửu giải nghĩa: 'Vi' là bé, 'phân' là phân biệt. Vi phân là sự phân biệt rất nhỏ nhưng khác 0, thể hiện sự khác biệt vi mô."
+        },
+        { // 3
+            text: `Theo "nguyên lý phân giã – tái tạo" được thầy Duymt nhấn mạnh, mối liên hệ giữa vi phân và tích phân là gì?`,
+            options: [
+                "Vi phân là đạo hàm, tích phân là nghịch đảo của đạo hàm",
+                "Phân giã thành tổng các vi phân, rồi tái tạo bằng tích phân (tổng) thì được nguyên bản",
+                "Vi phân là tổng, tích phân là hiệu",
+                "Phân giã là lấy đạo hàm, tái tạo là lấy vi phân"
+            ],
+            correct: 1,
+            explanation: "Triết lý 'phân giã – tái tạo': Vi phân là sự phân giã một vật thành các phần vô cùng bé, tích phân (phép cộng dồn \\( \\sum \\)) tái tạo lại vật ban đầu: \\( \\sum dx = \\int dx = b-a \\) hay \\( \\int df = f(b)-f(a) \\)."
+        },
+        { // 4
+            text: `Ký hiệu tích phân \\( \\displaystyle \\int_a^b f(x)\\,dx \\) bắt nguồn từ chữ nào và mang ý nghĩa gì theo Leibniz?`,
+            options: [
+                "Chữ 'S' (Sum) kéo dài – thể hiện tổng vô hạn các vi phân",
+                "Chữ 'I' (Integral) – viết tắt của 'integral'",
+                "Chữ 'D' (Differential) – viết hoa",
+                "Chữ '∑' (Sigma) rút gọn"
+            ],
+            correct: 0,
+            explanation: "Leibniz dùng ký hiệu ∫ kéo dài từ chữ S (Sum – tổng), ý chỉ phép cộng liên tục vô số lượng vi phân \\( f(x)dx \\)."
+        },
+        { // 5
+            text: `Cho hàm số \\( f(x) = 3x^5 + 2x^3 - x + 7 \\). Tính đạo hàm \\( f'(x) \\) trong 15 giây (theo bảng đạo hàm).`,
+            options: [
+                "\\( 15x^4 + 6x^2 + 1 \\)",
+                "\\( 15x^4 + 6x^2 - 1 \\)",
+                "\\( 3x^4 + 2x^2 - 1 \\)",
+                "\\( 15x^4 + 6x^2 - x \\)"
+            ],
+            correct: 1,
+            explanation: "Đạo hàm từng hạng tử: \\( (3x^5)' = 15x^4 \\), \\( (2x^3)' = 6x^2 \\), \\( (-x)' = -1 \\), hằng số 7 đạo hàm = 0. Kết quả: \\( 15x^4 + 6x^2 - 1 \\)."
+        },
+        { // 6
+            text: `Tìm nguyên hàm \\( \\displaystyle \\int (4x^3 + 2x - 1)\\,dx \\) (hằng số C).`,
+            options: [
+                "\\( x^4 + x^2 - x + C \\)",
+                "\\( 12x^2 + 2 + C \\)",
+                "\\( 4x^4 + x^2 - x + C \\)",
+                "\\( x^4 + x^2 + 1 + C \\)"
+            ],
+            correct: 0,
+            explanation: "Nguyên hàm: \\( \\int 4x^3 dx = x^4 \\), \\( \\int 2x dx = x^2 \\), \\( \\int -1 dx = -x \\), cộng hằng số C → \\( x^4 + x^2 - x + C \\)."
+        },
+        { // 7
+            text: `Theo bài giảng, "nguyên hàm" được hiểu theo nghĩa "nguyên" như thế nào?`,
+            options: [
+                "Nguyên bản của hàm số",
+                "Nguyên = trước đây (nguyên thủ tướng) → trước khi đạo hàm",
+                "Nguyên = duy nhất",
+                "Nguyên = toàn bộ"
+            ],
+            correct: 1,
+            explanation: "Thầy Duymt dùng phép so sánh: 'nguyên' giống như nguyên thủ tướng, nguyên thủ quốc gia – nghĩa là trước đây. Nguyên hàm là hàm số trước khi lấy đạo hàm."
+        },
+        { // 8
+            text: `Tính giá trị của \\( \\displaystyle \\int_a^b dx \\) (theo định lý cơ bản của giải tích) bằng:`,
+            options: [
+                "\\( b + a \\)",
+                "\\( b - a \\)",
+                "\\( a - b \\)",
+                "\\( a \\cdot b \\)"
+            ],
+            correct: 1,
+            explanation: "\\( \\int_a^b dx = \\big[ x \\big]_a^b = b - a \\). Đây chính là tổng vô số vi phân \\( dx \\) trên đoạn [a,b]. Minh họa cho phép tái tạo chiều dài từ phân giã vi phân."
+        },
+        { // 9
+            text: `Đạo hàm của hàm số \\( y = \\ln x \\) là:`,
+            options: [
+                "\\( \\dfrac{1}{x} \\)",
+                "\\( x \\)",
+                "\\( e^x \\)",
+                "\\( \\dfrac{1}{\\ln x} \\)"
+            ],
+            correct: 0,
+            explanation: "Theo bảng đạo hàm cơ bản: \\( \\frac{d}{dx}(\\ln x) = \\frac{1}{x} \\) với \\( x>0 \\)."
+        },
+        { // 10
+            text: `Tích phân \\( \\displaystyle \\int \\sin x \\,dx \\) bằng:`,
+            options: [
+                "\\( \\cos x + C \\)",
+                "\\( -\\cos x + C \\)",
+                "\\( \\sin x + C \\)",
+                "\\( -\\sin x + C \\)"
+            ],
+            correct: 1,
+            explanation: "Nguyên hàm của \\( \\sin x \\) là \\( -\\cos x + C \\), vì đạo hàm của \\( -\\cos x \\) là \\( \\sin x \\)."
+        }
+    ];
+
+    const totalQ = questions.length;
+    let userAnswers = new Array(totalQ).fill(null);
+    let answeredLock = new Array(totalQ).fill(false);
+
+    // Hàm render toàn bộ
+    function renderQuiz() {
+        const container = document.getElementById('quizContainer');
+        if (!container) return;
+        let html = '';
+        for (let i = 0; i < totalQ; i++) {
+            const q = questions[i];
+            const selectedIdx = userAnswers[i];
+            const isLocked = answeredLock[i];
+            const prefixes = ['A', 'B', 'C', 'D'];
+            
+            // Xây dựng options HTML
+            let optionsHtml = '';
+            for (let optIdx = 0; optIdx < q.options.length; optIdx++) {
+                let optionClasses = 'option';
+                const isCorrectOption = (optIdx === q.correct);
+                const isSelected = (selectedIdx === optIdx);
+                
+                if (isLocked && isSelected) {
+                    if (isCorrectOption) optionClasses += ' correct-highlight';
+                    else optionClasses += ' wrong-highlight';
+                }
+                if (isLocked && isCorrectOption) {
+                    optionClasses += ' correct-highlight';
+                }
+                
+                optionsHtml += `
+                    <div class="${optionClasses}" data-qidx="${i}" data-optidx="${optIdx}">
+                        <span class="prefix">${prefixes[optIdx]}</span>
+                        <span>${q.options[optIdx]}</span>
+                    </div>
+                `;
+            }
+            
+            // Feedback
+            let feedbackHtml = '';
+            if (isLocked) {
+                const isCorrectAns = (selectedIdx === q.correct);
+                const correctLetter = String.fromCharCode(65 + q.correct);
+                const correctAnswerText = q.options[q.correct];
+                const fbClass = isCorrectAns ? 'correct-feedback' : 'wrong-feedback';
+                feedbackHtml = `
+                    <div class="feedback ${fbClass}">
+                        <strong>${isCorrectAns ? '✓ Đúng rồi!' : '✗ Sai rồi!'}</strong><br>
+                        <strong>Đáp án đúng: ${correctLetter}. ${correctAnswerText}</strong><br>
+                        📘 <em>Giải thích:</em> ${q.explanation}
+                    </div>
+                `;
+            }
+            
+            html += `
+                <div class="question-card" id="card-${i}">
+                    <div class="q-header">
+                        <span class="q-num">Câu ${i+1}</span>
+                        <span style="flex:1"></span>
+                    </div>
+                    <div class="q-text">
+                        ${q.text}
+                    </div>
+                    <div class="options" id="options-${i}">
+                        ${optionsHtml}
+                    </div>
+                    ${feedbackHtml}
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+        attachOptionEvents();
+        // Kích hoạt MathJax render lại toàn bộ công thức trong container
+        if (window.MathJax) {
+            MathJax.typesetPromise([container]).catch(err => console.log(err));
+        }
+        updateScoreDisplay();
+    }
+    
+    function attachOptionEvents() {
+        const optionDivs = document.querySelectorAll('.option');
+        optionDivs.forEach(div => {
+            div.removeEventListener('click', optionClickHandler);
+            div.addEventListener('click', optionClickHandler);
+        });
+    }
+    
+    function optionClickHandler(e) {
+        const targetEl = e.target.closest('.option');
+        if (!targetEl) return;
+        const qIdx = parseInt(targetEl.dataset.qidx);
+        const optIdx = parseInt(targetEl.dataset.optidx);
+        if (isNaN(qIdx) || isNaN(optIdx)) return;
+        
+        if (answeredLock[qIdx]) {
+            // Thông báo nhẹ nếu đã trả lời
+            const cardDiv = document.getElementById(`card-${qIdx}`);
+            if (cardDiv && !cardDiv.querySelector('.temp-notice')) {
+                const notice = document.createElement('div');
+                notice.className = 'temp-notice';
+                notice.style.background = '#ffecb3';
+                notice.style.padding = '6px 12px';
+                notice.style.borderRadius = '30px';
+                notice.style.margin = '0 24px 12px 24px';
+                notice.style.fontSize = '0.8rem';
+                notice.innerText = '⚠️ Bạn đã trả lời câu này rồi. Nhấn nút "Làm lại" để thử lại!';
+                cardDiv.insertBefore(notice, cardDiv.querySelector('.options')?.nextSibling);
+                setTimeout(() => notice.remove(), 1500);
+            }
+            return;
+        }
+        
+        // Xử lý trả lời
+        userAnswers[qIdx] = optIdx;
+        answeredLock[qIdx] = true;
+        rerenderSingleQuestion(qIdx);
+        updateScoreDisplay();
+    }
+    
+    function rerenderSingleQuestion(qIdx) {
+        const q = questions[qIdx];
+        const selectedIdx = userAnswers[qIdx];
+        const isLocked = answeredLock[qIdx];
+        const cardDiv = document.getElementById(`card-${qIdx}`);
+        if (!cardDiv) return;
+        
+        const optionsContainer = cardDiv.querySelector('.options');
+        if (optionsContainer) {
+            const prefixes = ['A', 'B', 'C', 'D'];
+            let newOptionsHtml = '';
+            for (let optIdx = 0; optIdx < q.options.length; optIdx++) {
+                let optionClasses = 'option';
+                const isCorrectOption = (optIdx === q.correct);
+                const isSelected = (selectedIdx === optIdx);
+                
+                if (isLocked && isSelected) {
+                    if (isCorrectOption) optionClasses += ' correct-highlight';
+                    else optionClasses += ' wrong-highlight';
+                }
+                if (isLocked && isCorrectOption) {
+                    optionClasses += ' correct-highlight';
+                }
+                
+                newOptionsHtml += `
+                    <div class="${optionClasses}" data-qidx="${qIdx}" data-optidx="${optIdx}">
+                        <span class="prefix">${prefixes[optIdx]}</span>
+                        <span>${q.options[optIdx]}</span>
+                    </div>
+                `;
+            }
+            optionsContainer.innerHTML = newOptionsHtml;
+            // Gắn lại sự kiện
+            const newOpts = optionsContainer.querySelectorAll('.option');
+            newOpts.forEach(opt => {
+                opt.removeEventListener('click', optionClickHandler);
+                opt.addEventListener('click', optionClickHandler);
+            });
+        }
+        
+        // Xóa feedback cũ và thêm mới
+        const oldFeedback = cardDiv.querySelector('.feedback');
+        if (oldFeedback) oldFeedback.remove();
+        
+        if (isLocked) {
+            const isCorrectAns = (selectedIdx === q.correct);
+            const correctLetter = String.fromCharCode(65 + q.correct);
+            const correctAnswerText = q.options[q.correct];
+            const fbClass = isCorrectAns ? 'correct-feedback' : 'wrong-feedback';
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.className = `feedback ${fbClass}`;
+            feedbackDiv.innerHTML = `
+                <strong>${isCorrectAns ? '✓ Đúng rồi!' : '✗ Sai rồi!'}</strong><br>
+                <strong>Đáp án đúng: ${correctLetter}. ${correctAnswerText}</strong><br>
+                📘 <em>Giải thích:</em> ${q.explanation}
+            `;
+            const optionsContainerRef = cardDiv.querySelector('.options');
+            if (optionsContainerRef) {
+                optionsContainerRef.insertAdjacentElement('afterend', feedbackDiv);
+            }
+        }
+        
+        // MathJax render lại công thức trong card này
+        if (window.MathJax) {
+            MathJax.typesetPromise([cardDiv]).catch(err => console.log(err));
+        }
+    }
+    
+    function updateScoreDisplay() {
+        let correctCount = 0;
+        for (let i = 0; i < totalQ; i++) {
+            if (answeredLock[i] && userAnswers[i] === questions[i].correct) {
+                correctCount++;
+            }
+        }
+        document.getElementById('scoreValue').innerText = correctCount;
+    }
+    
+    function resetQuiz() {
+        userAnswers.fill(null);
+        answeredLock.fill(false);
+        renderQuiz();
+    }
+    
+    // Khởi tạo
+    renderQuiz();
+    document.getElementById('resetQuiz').addEventListener('click', resetQuiz);
+</script>
+</body>
+</html>
