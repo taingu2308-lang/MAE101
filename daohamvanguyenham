@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đề Thi Đạo Hàm - Nguyên Hàm</title>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #e3f2fd, #ffffff);
+      color: #222;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+      text-align: center;
+      color: #0d47a1;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #555;
+      margin-bottom: 30px;
+      font-style: italic;
+    }
+
+    .section-title {
+      background: #0d47a1;
+      color: white;
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 35px;
+      font-size: 22px;
+    }
+
+    .question {
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      background: #fafafa;
+      transition: 0.3s;
+    }
+
+    .question:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .question h3 {
+      margin-top: 0;
+      color: #1565c0;
+    }
+
+    .option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      margin: 10px 0;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #eceff1;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 16px;
+    }
+
+    .option:hover {
+      background: #d6e4f0;
+    }
+
+    .correct {
+      background: #4caf50 !important;
+      color: white;
+    }
+
+    .wrong {
+      background: #f44336 !important;
+      color: white;
+    }
+
+    .answer-box {
+      margin-top: 15px;
+      padding: 15px;
+      border-left: 5px solid #1565c0;
+      background: #e3f2fd;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .tip {
+      margin-top: 10px;
+      padding: 10px;
+      background: #fff8e1;
+      border-left: 5px solid #ff9800;
+      border-radius: 8px;
+    }
+
+    .score-board {
+      position: sticky;
+      top: 10px;
+      z-index: 1000;
+      background: #0d47a1;
+      color: white;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .download-box {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .download-btn {
+      background: #2e7d32;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 12px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .download-btn:hover {
+      background: #1b5e20;
+      transform: scale(1.05);
+    }
+
+    @media(max-width:768px){
+      .container {
+        padding: 15px;
+      }
+
+      .option {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" id="examContent">
+
+  <h1>ĐỀ THI TRẮC NGHIỆM TƯƠNG TÁC</h1>
+  <div class="subtitle">
+    Đạo Hàm – Nguyên Hàm | 20 Câu Hỏi Tương Tác Có Giải Thích
+  </div>
+
+  <div class="score-board">
+    Điểm hiện tại: <span id="score">0</span> / 20
+  </div>
+
+  <div class="section-title">PHẦN I – LÝ THUYẾT (5 CÂU)</div>
+
+  <div id="questions"></div>
+
+  <div class="download-box">
+    <button class="download-btn" onclick="downloadHTML()">⬇ Tải File HTML</button>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    type: 'Lý thuyết',
+    level: 'Dễ',
+    question: '1. Đạo hàm biểu diễn điều gì?',
+    options: [
+      'Diện tích hình phẳng',
+      'Tốc độ thay đổi',
+      'Tổng vô hạn',
+      'Phép quay vector'
+    ],
+    answer: 1,
+    explain: 'Đạo hàm cho biết hàm số thay đổi nhanh hay chậm theo biến số. Nó đo tốc độ biến thiên tức thời.',
+    tip: 'Nhớ từ khóa: đạo hàm = tốc độ thay đổi.'
+  },
+  {
+    type: 'Lý thuyết',
+    level: 'Dễ',
+    question: '2. Trong nguyên hàm \(\int f(x)dx = F(x)+C\), chữ C là gì?',
+    options: [
+      'Hằng số tùy ý',
+      'Đạo hàm',
+      'Giới hạn',
+      'Sai số tính toán'
+    ],
+    answer: 0,
+    explain: 'Khi lấy đạo hàm thì mọi hằng số đều mất đi, nên khi nguyên hàm phải cộng thêm hằng số C.',
+    tip: 'Nguyên hàm luôn nhớ thêm +C.'
+  },
+  {
+    type: 'Lý thuyết',
+    level: 'Dễ',
+    question: '3. Công thức cơ bản của đạo hàm là?',
+    options: [
+      '\\(f(x)+g(x)\\)',
+      '\\(\\lim_{\\Delta x \\to 0} \\frac{f(x+\\Delta x)-f(x)}{\\Delta x}\\)',
+      '\\(a^2+b^2=c^2\\)',
+      '\\(\\int_a^b f(x)dx\\)'
+    ],
+    answer: 1,
+    explain: 'Đây là định nghĩa chính xác của đạo hàm bằng giới hạn.',
+    tip: 'Thấy lim và Δx → 0 thì nghĩ ngay đến đạo hàm.'
+  },
+  {
+    type: 'Lý thuyết',
+    level: 'Trung bình',
+    question: '4. Theo bài giảng, đạo hàm được ví như điều gì?',
+    options: [
+      'Ký ức',
+      'Bản đồ',
+      'Phép quên',
+      'Dòng thời gian'
+    ],
+    answer: 2,
+    explain: 'Bài giảng mô tả đạo hàm là phép quên vì nó xóa mất hằng số ban đầu.',
+    tip: 'Đạo hàm quên quá khứ.'
+  },
+  {
+    type: 'Lý thuyết',
+    level: 'Trung bình',
+    question: '5. Định lý cơ bản của giải tích là?',
+    options: [
+      '\\(\\int_a^b f\'(x)dx = f(b)-f(a)\\)',
+      '\\(a+b=b+a\\)',
+      '\\(x^2+y^2=z^2\\)',
+      '\\(\\sin^2x+\\cos^2x=2\\)'
+    ],
+    answer: 0,
+    explain: 'Định lý này kết nối đạo hàm và nguyên hàm.',
+    tip: 'Cộng dồn biến thiên → chỉ còn biên.'
+  },
+
+  {
+    section: 'BÀI TẬP DỄ (5 CÂU)'
+  },
+
+  {
+    type: 'Bài tập',
+    level: 'Dễ',
+    question: '6. Tính đạo hàm của \\(f(x)=x^2\\)',
+    options: [
+      '\\(2x\\)',
+      '\\(x\\)',
+      '\\(x^3\\)',
+      '\\(2\\)'
+    ],
+    answer: 0,
+    explain: 'Theo quy tắc đạo hàm lũy thừa: \\(x^n\\)\' = \\(nx^{n-1}\\).',
+    tip: 'Hạ số mũ xuống trước rồi trừ số mũ đi 1.'
+  },
+  {
+    type: 'Bài tập',
+    level: 'Dễ',
+    question: '7. Tính nguyên hàm của \\(2x\\)',
+    options: [
+      '\\(x^2+C\\)',
+      '\\(2+C\\)',
+      '\\(x+C\\)',
+      '\\(2x^2+C\\)'
+    ],
+    answer: 0,
+    explain: 'Vì đạo hàm của \\(x^2\\) là \\(2x\\).',
+    tip: 'Nguyên hàm là làm ngược lại đạo hàm.'
+  },
+  {
+    type: 'Bài tập',
+    level: 'Dễ',
+    question: '8. Đạo hàm của hằng số 7 bằng?',
+    options: [
+      '1',
+      '7',
+      '0',
+      '-7'
+    ],
+    answer: 2,
+    explain: 'Hằng số không thay đổi nên tốc độ thay đổi bằng 0.',
+    tip: 'Mọi hằng số đạo hàm đều bằng 0.'
+  },
+  {
+    type: 'Bài tập',
+    level: 'Dễ',
+    question: '9. Tính \\(\\int 3x^2dx\\)',
+    options: [
+      '\\(x^3+C\\)',
+      '\\(3x+C\\)',
+      '\\(x^2+C\\)',
+      '\\(9x+C\\)'
+    ],
+    answer: 0,
+    explain: 'Vì đạo hàm của \\(x^3\\) là \\(3x^2\\).',
+    tip: 'Nguyên hàm tăng số mũ lên 1 rồi chia cho số mũ mới.'
+  },
+  {
+    type: 'Bài tập',
+    level: 'Dễ',
+    question: '10. Đạo hàm của \\(5x\\) là?',
+    options: [
+      '0',
+      '1',
+      '5',
+      'x'
+    ],
+    answer: 2,
+    explain: 'Đạo hàm của \\(ax\\) là \\(a\\).',
+    tip: 'Đạo hàm của x bằng 1.'
+  },
+
+  {
+    section: 'BÀI TẬP TRUNG BÌNH (5 CÂU)'
+  },
+
+  {
+    type: 'Bài tập',
+    level: 'Trung bình',
+    question: '11. Tính đạo hàm của \\(f(x)=3x^3+2x\\)',
+    options: [
+      '\\(9x^2+2\\)',
+      '\\(3x^2+2\\)',
+      '\\(9x+2\\)',
+      '\\(6x^2\\)'
+    ],
+    answer: 0,
+    explain: 'Đạo hàm từng hạng tử: \\(3x^3\\to9x^2\\), \\(2x\\to2\\).',
+    tip: 'Đạo hàm từng phần rồi cộng lại.'
+  },
+  {
+    type: 'Bài tập',
+    level: 'Trung bình',
+    question: '12. Tính \\(\\int x^3dx\\)',
+    options: [
+      '\\(x^4+C\\)',
+      '\\(\\frac{x^4}{4}+C\\)',
+      '\\(4x+C\\)',
+      '\\(x^2+C\\)'
+    ],
+    answer: 1,
+    explain: 'Nguyên hàm của \\(x^n\\) là \\(\\frac{x^{n+1}}{n+1}+C\\).',
+    tip: 'Tăng số mũ lên 1 rồi chia cho số mũ mới.'
+  },
+  {
+    type: 'Bài tập',
+    level: 'Trung bình',
+    question: '13. Đạo hàm của \\(\\sin x\\) là?',
+    options: [
+      '\\(\\cos x\\)',
+      '\\(-\\sin x\\)',
+      '\\(-\\cos x\\)',
+      '\\(\\tan x\\)'
+    ],
+    answer: 0,
+    explain: 'Đây là công thức lượng giác cơ bản.',
+    tip: 'Sin → cos, cos → -sin.'
+  },
+  {
+    type: 'Bài tập',
+    level: 'Trung bình',
+    question: '14. Tính \\(\\int 4dx\\)',
+    options: [
+      '\\(4+C\\)',
+      '\\(x^4+C\\)',
+      '\\(4x+C\\)',
+      '\\(0\\)'
+    ],
+    answer: 2,
+    explain: 'Nguyên hàm của hằng số a là \\(ax+C\\).',
+    tip: 'Thêm x vào phía sau hằng số.'
+  },
+  {
+    type: 'Bài tập',
+    level: 'Trung bình',
+    question: '15. Đạo hàm của \\(e^x\\) là?',
+    options: [
+      '\\(xe^{x-1}\\)',
+      '\\(0\\)',
+      '\\(e^x\\)',
+      '\\(1\\)'
+    ],
+    answer: 2,
+    explain: 'Hàm mũ cơ số e có đạo hàm bằng chính nó.',
+    tip: 'e^x là hàm “đặc biệt”, đạo hàm giữ nguyên.'
+  },
+
+  {
+    section: 'BÀI TẬP KHÓ (5 CÂU)'
+  },
+
+  {
+    type: 'Bài tập',
+    level: 'Khó',
+    question: '16. Tính đạo hàm của \\(f(x)=x^2\\sin x\\)',
+    options: [
+      '\\(2x\\sin x + x^2\\cos x\\)',
+      '\\(2x\\cos x\\)',
+      '\\(x^2\\cos x\\)',
+      '\\(2x\\sin x\\)'
+    ],
+    answer: 0,
+    explain: 'Dùng quy tắc đạo hàm tích: \\(uv\\)\'=u\'v+uv\'.',
+    tip: 'Thấy nhân hai hàm → dùng đạo hàm tích.'
+  },
+  {
+    type: 'Bài tập',
+    level: 'Khó',
+    question: '17. Tính \\(\\int (2x+1)dx\\)',
+    options: [
+      '\\(x^2+x+C\\)',
+      '\\(2x^2+C\\)',
+      '\\(x^2+1+C\\)',
+      '\\(2+x+C\\)'
+    ],
+    answer: 0,
+    explain: 'Tách nguyên hàm từng phần: \\(\\int2x dx=x^2\\), \\(\\int1dx=x\\).',
+    tip: 'Nguyên hàm tổng = tổng các nguyên hàm.'
+  },
+  {
+    type: 'Bài tập',
+    level: 'Khó',
+    question: '18. Nếu \\(f\'(x)=6x\\), thì một nguyên hàm của f\'(x) là?',
+    options: [
+      '\\(3x^2+C\\)',
+      '\\(6x+C\\)',
+      '\\(x^6+C\\)',
+      '\\(12x+C\\)'
+    ],
+    answer: 0,
+    explain: 'Vì đạo hàm của \\(3x^2\\) là \\(6x\\).',
+    tip: 'Làm ngược lại quy tắc đạo hàm.'
+  },
+  {
+    type: 'Bài tập',
+    level: 'Khó',
+    question: '19. Tính đạo hàm của \\(\\ln x\\)',
+    options: [
+      '\\(x\\)',
+      '\\(\\frac{1}{x}\\)',
+      '\\(\\ln x\\)',
+      '\\(e^x\\)'
+    ],
+    answer: 1,
+    explain: 'Đây là công thức đạo hàm logarit cơ bản.',
+    tip: 'ln x → 1/x.'
+  },
+  {
+    type: 'Bài tập',
+    level: 'Khó',
+    question: '20. Tính \\(\\int_0^1 2x dx\\)',
+    options: [
+      '0',
+      '1',
+      '2',
+      '4'
+    ],
+    answer: 1,
+    explain: 'Nguyên hàm của \\(2x\\) là \\(x^2\\). Thay cận: \\(1^2-0^2=1\\).',
+    tip: 'Tính nguyên hàm trước rồi thay cận sau.'
+  }
+];
+
+const container = document.getElementById('questions');
+let score = 0;
+
+questions.forEach((q, index) => {
+
+  if(q.section){
+    const section = document.createElement('div');
+    section.className = 'section-title';
+    section.innerText = q.section;
+    container.appendChild(section);
+    return;
+  }
+
+  const div = document.createElement('div');
+  div.className = 'question';
+
+  div.innerHTML = `
+    <h3>${q.question}</h3>
+    <p><b>Loại:</b> ${q.type} | <b>Mức độ:</b> ${q.level}</p>
+  `;
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = opt;
+
+    btn.onclick = () => {
+      const buttons = div.querySelectorAll('.option');
+      buttons.forEach(b => b.disabled = true);
+
+      if(i === q.answer){
+        btn.classList.add('correct');
+        score++;
+        document.getElementById('score').innerText = score;
+      } else {
+        btn.classList.add('wrong');
+        buttons[q.answer].classList.add('correct');
+      }
+
+      answerBox.style.display = 'block';
+
+      if(window.MathJax){
+        MathJax.typesetPromise();
+      }
+    };
+
+    div.appendChild(btn);
+  });
+
+  const answerBox = document.createElement('div');
+  answerBox.className = 'answer-box';
+  answerBox.innerHTML = `
+    <b>Đáp án đúng:</b> ${q.options[q.answer]}<br><br>
+    <b>Giải thích:</b> ${q.explain}
+    <div class="tip">
+      <b>Mẹo làm nhanh:</b> ${q.tip}
+    </div>
+  `;
+
+  div.appendChild(answerBox);
+  container.appendChild(div);
+});
+
+function downloadHTML(){
+  const htmlContent = document.documentElement.outerHTML;
+  const blob = new Blob([htmlContent], {type:'text/html'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'de_thi_dao_ham_nguyen_ham.html';
+  link.click();
+}
+
+if(window.MathJax){
+  MathJax.typesetPromise();
+}
+</script>
+
+</body>
+</html>
